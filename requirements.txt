@@ -1,19 +1,14 @@
-# Box SDK
-boxsdk==3.9.2
+boxsdk==3.14.0
 
-# Web scraping
 feedparser==6.0.11
 beautifulsoup4==4.12.3
 trafilatura==1.6.2
 # lxml will be installed automatically by trafilatura with correct version
 
-# Selenium for JavaScript-heavy sites
 selenium==4.15.2
 webdriver-manager==4.0.1
 
-# Utilities
-requests==2.31.0
-python-dotenv==1.0.1
+requests==2.32.3
+python-dotenv==1.1.0
 
-# Flask (only for authentication)
-flask==3.0.0
+Flask==3.1.0
