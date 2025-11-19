@@ -1,0 +1,21 @@
+# Virtual Environment
+venv/
+env/
+
+# Environment variables (IMPORTANT!)
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+
+# Output
+out/
+*.json
+*.md
