@@ -56,7 +56,7 @@ if __name__ == "__main__":
     load_dotenv()
     
     DB_DIR = os.getenv("CHROMA_DB_DIR", 'chroma_db')
-    ARTICLES_DIR = os.getenv("ARTICLES_DIR", 'out')
+    ARTICLES_DIR = os.getenv("BOX_PATH", 'out')
     
     # Initialize ChromaDB
     chroma_client = PersistentClient(
