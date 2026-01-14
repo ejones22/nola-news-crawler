@@ -66,6 +66,7 @@ KEYWORDS = {
     "sanitation", "street repair", "pothole", "traffic", "parking"
 }
 
+#creates id for articles
 def sha16(s: str) -> str:
     """Generate 16-character hash for URL identification"""
     return hashlib.sha256(s.encode("utf-8")).hexdigest()[:16]
@@ -88,7 +89,7 @@ def refresh_box_token(refresh_token: str) -> tuple[str, str]:
     
     # Update .env file
     update_env_tokens(new_access_token, new_refresh_token)
-    print("✅ Token refreshed successfully")
+    print(" Token refreshed successfully")
     
     return new_access_token, new_refresh_token
 
@@ -123,7 +124,7 @@ def init_box_client() -> Client:
         try:
             BOX_ACCESS_TOKEN, BOX_REFRESH_TOKEN = refresh_box_token(BOX_REFRESH_TOKEN)
         except Exception as e:
-            print(f"⚠️ Token refresh failed: {e}. Using existing access token.")
+            print(f"Token refresh failed: {e}. Using existing access token.")
     
     auth = OAuth2(
         client_id=BOX_CLIENT_ID,
@@ -151,7 +152,7 @@ def load_articles_from_box(client: Client, folder_id: str) -> list[dict]:
             content = client.file(articles_file.id).content()
             data = json.loads(content.decode('utf-8'))
             article_count = len(data) if isinstance(data, list) else 0
-            print(f"✅ Found {article_count} existing articles")
+            print(f"Found {article_count} existing articles")
             return data if isinstance(data, list) else []
         else:
             print("📝 No existing articles.json found, creating new file...")
@@ -159,10 +160,10 @@ def load_articles_from_box(client: Client, folder_id: str) -> list[dict]:
             empty_data = json.dumps([], indent=2).encode('utf-8')
             stream = BytesIO(empty_data)
             folder.upload_stream(stream, "articles.json")
-            print("✅ Created new articles.json in Box")
+            print(" Created new articles.json in Box")
             return []
     except BoxAPIException as e:
-        print(f"❌ Box API Error: {e}")
+        print(f" Box API Error: {e}")
         raise
 
 def get_seen_urls(articles: list[dict]) -> set[str]:
@@ -193,10 +194,10 @@ def save_articles_to_box(client: Client, folder_id: str, articles: list[dict]):
             # Create new file
             folder.upload_stream(stream, "articles.json")
         
-        print("✅ Articles saved to Box")
+        print(" Articles saved to Box")
             
     except BoxAPIException as e:
-        print(f"❌ Box API Error: {e}")
+        print(f"Box API Error: {e}")
         raise
 
 def box_upload_file(client: Client, folder_id: str, file_path: Path, box_filename: str):
@@ -221,7 +222,7 @@ def box_upload_file(client: Client, folder_id: str, file_path: Path, box_filenam
                 folder.upload_stream(f, box_filename)
                 
     except BoxAPIException as e:
-        print(f"❌ Box API Error uploading {box_filename}: {e}")
+        print(f" Box API Error uploading {box_filename}: {e}")
         raise
 
 def fetch_rss_entries():
@@ -239,11 +240,11 @@ def fetch_rss_entries():
             if hasattr(d, 'status'):
                 print(f"     Status: {d.status}")
             if hasattr(d, 'bozo') and d.bozo:
-                print(f"     ⚠️ Feed parsing warning: {d.get('bozo_exception', 'Unknown error')}")
+                print(f"      Feed parsing warning: {d.get('bozo_exception', 'Unknown error')}")
             
             entry_count = len(d.entries)
             total_entries += entry_count
-            print(f"     ✅ Found {entry_count} entries from {source}")
+            print(f"      Found {entry_count} entries from {source}")
             
             for e in d.entries:
                 yield {
@@ -253,7 +254,7 @@ def fetch_rss_entries():
                     "source": source,
                 }
         except Exception as e:
-            print(f"     ❌ Error fetching feed: {e}")
+            print(f"      Error fetching feed: {e}")
             continue
     
     print(f"\n📊 Total entries fetched: {total_entries}")
@@ -312,7 +313,7 @@ def extract_text(url: str) -> tuple[str, str]:
         
         # If trafilatura failed, try BeautifulSoup fallback
         if not downloaded or len(downloaded) < 100:
-            print(f"   ⚠️ Trafilatura extraction weak ({len(downloaded or '')} chars), trying BeautifulSoup fallback...")
+            print(f"   Trafilatura extraction weak ({len(downloaded or '')} chars), trying BeautifulSoup fallback...")
             soup = BeautifulSoup(html, "lxml")
             
             # Try to find article content
@@ -338,7 +339,7 @@ def extract_text(url: str) -> tuple[str, str]:
         
         text = downloaded or ""
         
-        print(f"   ✅ Extracted {len(text)} characters, title: '{title[:50]}...'")
+        print(f"    Extracted {len(text)} characters, title: '{title[:50]}...'")
         
     finally:
         driver.quit()
@@ -351,7 +352,7 @@ def looks_relevant(title: str, text: str) -> bool:
     matched_keywords = [k for k in KEYWORDS if k in blob]
     
     if matched_keywords:
-        print(f"   ✅ Relevant (matched: {', '.join(matched_keywords[:3])}{'...' if len(matched_keywords) > 3 else ''})")
+        print(f"    Relevant (matched: {', '.join(matched_keywords[:3])}{'...' if len(matched_keywords) > 3 else ''})")
         return True
     else:
         print(f"   ⏭️  Not relevant (no keyword matches)")
@@ -378,9 +379,9 @@ def main():
     print("="*70)
     
     # Validate environment variables
-    assert BOX_CLIENT_ID, "❌ Missing BOX_CLIENT_ID in .env file"
-    assert BOX_CLIENT_SECRET, "❌ Missing BOX_CLIENT_SECRET in .env file"
-    assert BOX_ACCESS_TOKEN or BOX_REFRESH_TOKEN, "❌ Missing both BOX_ACCESS_TOKEN and BOX_REFRESH_TOKEN in .env file"
+    assert BOX_CLIENT_ID, " Missing BOX_CLIENT_ID in .env file"
+    assert BOX_CLIENT_SECRET, " Missing BOX_CLIENT_SECRET in .env file"
+    assert BOX_ACCESS_TOKEN or BOX_REFRESH_TOKEN, " Missing both BOX_ACCESS_TOKEN and BOX_REFRESH_TOKEN in .env file"
     
     print(f"📦 Box Folder ID: {BOX_FOLDER_ID}")
     
@@ -467,7 +468,7 @@ def main():
             time.sleep(10)
             
         except Exception as e:
-            print(f"   ❌ Error processing article: {e}")
+            print(f"    Error processing article: {e}")
             continue
     
     # Save updated article list to Box
@@ -496,7 +497,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\n⚠️  Crawler interrupted by user")
+        print("\n\n  Crawler interrupted by user")
     except Exception as e:
-        print(f"\n\n❌ Fatal error: {e}")
+        print(f"\n\n Fatal error: {e}")
         raise
