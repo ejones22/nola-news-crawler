@@ -1,10 +1,14 @@
 """
-Simple Flask app to serve a RAG model over video transcripts AND news articles.
-- Council collection from CHROMA_DB_DIR (original location)
-- Articles collection from ARTICLES_CHROMA_DB_DIR (your local directory)
+Simple Flask app to serve a RAG model over video transcripts.
+- Reads chroma vector database from CHROMA_DB_DIR
 - Requires OPENAI_API_KEY
 - model set by OPENAI_MODEL (default: gpt-4o-mini)
+- port set by PORT (8080 default)
+
+NB: By default, embeds queries using all-MiniLM-L6-v2. The chroma db will
+need to use the same.
 """
+
 import os
 from datetime import datetime
 import dspy
